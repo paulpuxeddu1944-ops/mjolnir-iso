@@ -29,11 +29,11 @@ Sur une machine Arch Linux, en root :
 pacman -S --needed archiso git
 git clone https://github.com/paulpuxeddu1944-ops/mjolnir-iso.git
 cd mjolnir-iso
-mkarchiso -v -w /tmp/mjolnir-work -o out .
+mkarchiso -v -w /var/tmp/mjolnir-work -o out .
 ```
 
 L'ISO sort dans `out/mjolnir-AAAA.MM.JJ-x86_64.iso`. Le répertoire de travail
-`/tmp/mjolnir-work` peut être supprimé après le build.
+`/var/tmp/mjolnir-work` (sur disque, pas dans `/tmp` qui est en RAM) peut être supprimé après le build.
 
 ## Tester
 
