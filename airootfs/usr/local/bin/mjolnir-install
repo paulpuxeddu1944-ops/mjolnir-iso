@@ -19,5 +19,12 @@ if [ $RETOUR -ne 0 ]; then
     exit 1
 fi
 
+LISTE_DISQUES=$(lsblk -dn -o NAME,SIZE,TYPE | awk '$3=="disk" && $1 !~ /^zram/ {print "/dev/"$1" - "$2}')
+NB_DISQUES=$(echo "$LISTE_DISQUES" | grep -c .)
+
+dialog --cr-wrap \
+  --backtitle "MjolnirOS - Installateur" \
+  --title "Disques détectés" \
+  --msgbox "$NB_DISQUES disque(s) détecté(s) :\n\n$LISTE_DISQUES" 15 60
+
 clear
-echo "Profil choisi : $PROFIL"
