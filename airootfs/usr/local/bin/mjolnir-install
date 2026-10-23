@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PROFIL=$(dialog --clear \
+  --backtitle "MjolnirOS - Installateur" \
+  --title "Profil de la machine" \
+  --menu "Choisis le profil a installer :" 15 60 3 \
+  poste   "Poste de bureau avec univers graphique" \
+  serveur "Serveur terminal militaire (CLI)" \
+  minimal "Base seule" \
+  3>&1 1>&2 2>&3)
+
+RETOUR=$?
+
+if [ $RETOUR -ne 0 ]; then
+    clear
+    echo "Installation annulée."
+    exit 1
+fi
+
+clear
+echo "Profil choisi : $PROFIL"
