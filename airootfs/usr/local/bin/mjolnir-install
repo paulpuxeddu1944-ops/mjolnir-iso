@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DIALOGRC="${DIALOGRC:-/etc/mjolnir/dialogrc}"
+
 PROFIL=$(dialog --clear \
   --backtitle "MjolnirOS - Installateur" \
   --title "Profil de la machine" \
