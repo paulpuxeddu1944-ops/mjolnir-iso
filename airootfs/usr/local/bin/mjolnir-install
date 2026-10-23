@@ -27,4 +27,39 @@ dialog --cr-wrap \
   --title "Disques détectés" \
   --msgbox "$NB_DISQUES disque(s) détecté(s) :\n\n$LISTE_DISQUES" 15 60
 
+if [ $NB_DISQUES -eq 0 ]; then
+    dialog --backtitle "MjolnirOS - Installateur" \
+      --title "Erreur" \
+      --msgbox "Aucun disque détecté. Installation impossible." 8 50
+    clear
+    exit 1
+fi
+
+OPTIONS=(ext4 "Standard, un seul disque")
+OPTIONS+=(btrfs "Btrfs + snapper, un seul disque")
+
+if [ $NB_DISQUES -ge 2 ]; then
+    OPTIONS+=(raid0 "mdadm RAID 0 + Btrfs + snapper")
+    OPTIONS+=(raid1 "mdadm RAID 1 + Btrfs + snapper")
+fi
+
+if [ $NB_DISQUES -ge 3 ]; then
+    OPTIONS+=(raid5 "mdadm RAID 5 + Btrfs + snapper")
+fi
+
+if [ $NB_DISQUES -ge 4 ]; then
+    OPTIONS+=(raid6 "mdadm RAID 6 + Btrfs + snapper")
+    OPTIONS+=(raid10 "mdadm RAID 10 + Btrfs + snapper")
+fi
+
+STOCKAGE=$(dialog --clear \
+  --backtitle "MjolnirOS - Installateur" \
+  --title "Stockage" \
+  --menu "Choisis la configuration des disques :" 15 60 6 \
+  "${OPTIONS[@]}" \
+  3>&1 1>&2 2>&3)
+
 clear
+
+echo "Profil : $PROFIL"
+echo "Stockage : $STOCKAGE"
