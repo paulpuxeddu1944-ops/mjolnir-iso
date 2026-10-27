@@ -59,7 +59,44 @@ STOCKAGE=$(dialog --clear \
   "${OPTIONS[@]}" \
   3>&1 1>&2 2>&3)
 
+if [ $? -ne 0 ]; then
+    clear
+    echo "Installation annulée."
+    exit 1
+fi
+
+case "$STOCKAGE" in
+    ext4|btrfs)
+        ;;
+    raid*)
+        dialog --backtitle "MjolnirOS - Installateur" \
+          --title "Bientôt disponible" \
+          --msgbox "Le RAID mdadm arrive dans une prochaine version de MjolnirOS." 8 60
+        clear
+        exit 1
+        ;;
+esac
+
+DISQUES_MENU=()
+while read -r NOM TAILLE; do
+    DISQUES_MENU+=("/dev/$NOM" "$TAILLE")
+done < <(lsblk -dn -o NAME,SIZE,TYPE | awk '$3=="disk" && $1 !~ /^zram/ {print $1, $2}')
+
+DISQUE=$(dialog --clear \
+  --backtitle "MjolnirOS - Installateur" \
+  --title "Disque cible" \
+  --menu "Sur quel disque installer MjolnirOS ?" 15 60 6 \
+  "${DISQUES_MENU[@]}" \
+  3>&1 1>&2 2>&3)
+
+if [ $? -ne 0 ]; then
+    clear
+    echo "Installation annulée."
+    exit 1
+fi
+
 clear
 
 echo "Profil : $PROFIL"
 echo "Stockage : $STOCKAGE"
+echo "Disque : $DISQUE"
